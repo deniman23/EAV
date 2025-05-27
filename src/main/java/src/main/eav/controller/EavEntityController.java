@@ -20,32 +20,19 @@ public class EavEntityController {
         this.eavEntityService = eavEntityService;
     }
 
-    /**
-     * API для создания сущности.
-     * Получает DTO, преобразует его в сущность и возвращает сохранённый объект в виде DTO.
-     */
     @PostMapping
     public ResponseEntity<EavEntityDto> createEntity(@RequestBody EavEntityDto dto) {
         EavEntityDto createdEntity = eavEntityService.save(dto);
         return ResponseEntity.ok(createdEntity);
     }
 
-    /**
-     * API для получения сущности по идентификатору, включая атрибуты и связи.
-     */
     @GetMapping("/{id}")
     public ResponseEntity<EavEntityDto> getEntity(@PathVariable Long id) {
         EavEntityDto entityDto = eavEntityService.findById(id);
         return ResponseEntity.ok(entityDto);
     }
 
-    /**
-     * API для поиска сущностей.
-     * Если передан параметр type (например, /api/entities?type=example), то выполняется поиск по типу;
-     * если же переданы другие параметры фильтра (например, search, sortOrder и т.п.) через EavEntityFilter,
-     * то используется фильтрация с динамическим построением запроса.
-     * Если ничего не передано — возвращаются все сущности.
-     */
+
     @GetMapping
     public ResponseEntity<List<EavEntityDto>> getEntities(
             @RequestParam(required = false) String type,
@@ -62,18 +49,12 @@ public class EavEntityController {
     }
 
 
-    /**
-     * API для обновления сущности.
-     */
     @PutMapping("/{id}")
     public ResponseEntity<EavEntityDto> updateEntity(@PathVariable Long id, @RequestBody EavEntityDto dto) {
         EavEntityDto updatedEntity = eavEntityService.update(id, dto);
         return ResponseEntity.ok(updatedEntity);
     }
 
-    /**
-     * API для удаления сущности по id.
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEntity(@PathVariable Long id) {
         eavEntityService.deleteEntity(id);

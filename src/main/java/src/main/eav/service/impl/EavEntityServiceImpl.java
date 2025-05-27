@@ -1,8 +1,6 @@
 package src.main.eav.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import src.main.eav.dao.EavEntityDaoService;
@@ -39,8 +37,6 @@ public class EavEntityServiceImpl implements EavEntityService {
     @Override
     @Transactional(readOnly = true)
     public List<EavEntityDto> findByType(String type) {
-        // Можно использовать метод репозитория напрямую (findByType) или спецификацию,
-        // здесь мы вызываем findByType как определено в DAO.
         List<EavEntity> entities = daoService.findByType(type);
         return entities.stream()
                 .map(EavEntityMapper::entityToDto)
@@ -99,13 +95,6 @@ public class EavEntityServiceImpl implements EavEntityService {
         daoService.deleteEntity(id);
     }
 
-    /**
-     * Метод для добавления атрибутов и связей в сущность из DTO.
-     * Избавляет от дублирования кода в методах save() и update().
-     *
-     * @param entity сущность, в которую добавляются атрибуты и связи
-     * @param dto    исходный DTO, содержащий данные
-     */
     private void addAttributesAndRelations(EavEntity entity, EavEntityDto dto) {
         // Добавление атрибутов
         if (dto.getAttributes() != null) {
