@@ -62,6 +62,8 @@ class OrderService
                 ]);
 
                 $orderData['qr_url'] = $qr['qr_url'];
+
+                \App\Jobs\CheckQrInvoiceJob::dispatch($orderModel->id, $qr['invoice_id'])->onQueue('default');
             } catch (\Throwable $e) {
                 Log::channel('orders_log')->warning("[{$traceId}] -> QR Manager unavailable", [
                     'order_id' => $orderModel->id ?? null,

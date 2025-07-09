@@ -70,4 +70,27 @@ class QrManagerClient
             throw $e;
         }
     }
+
+    public function checkStatus(string $invoiceId): array
+    {
+        try {
+            $response = $this->http->get($this->baseUrl . '/invoice/' . urlencode($invoiceId), [
+                'headers' => [
+                    'X-Api-Key'    => $this->apiKey,
+                    'Accept'       => 'application/json',
+                ],
+            ]);
+            $body = json_decode($response->getBody()->getContents(), true);
+            if ($response->getStatusCode() >= 300 || ! isset($body['status'])) {
+                throw new \RuntimeException('QR Manager status error');
+            }
+            return $body;
+        } catch (GuzzleException $e) {
+            Log::error('QR Manager status HTTP error', [
+                'invoice_id' => $invoiceId,
+                'msg'        => $e->getMessage(),
+            ]);
+            throw $e;
+        }
+    }
 }
